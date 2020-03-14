@@ -1,4 +1,17 @@
+###########################################
+# Syntax Coloring Map For DHT-sensor-library
+###########################################
+
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
 ThingSpeakDev	KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+
 setNumFields	KEYWORD2
 getNumFields	KEYWORD2
 setWriteAPIKey	KEYWORD2
