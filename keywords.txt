@@ -1,0 +1,9 @@
+ThingSpeakDev	KEYWORD1
+setNumFields	KEYWORD2
+getNumFields	KEYWORD2
+setWriteAPIKey	KEYWORD2
+getWriteAPIKey	KEYWORD2
+setField	KEYWORD2
+getField	KEYWORD2
+isReady	KEYWORD2
+sendData	KEYWORD2
