@@ -1,14 +1,15 @@
 #include "thingSpeakDev.h"
 
-const char * myWriteAPIKey = "QI0H0CLOIQGHEJON";
+const char *myWriteAPIKey = "ABCDEFGHIFKLPMNO";
 ThingSpeakDev tsd;
-  
-void setup() 
+
+void setup()
 {
   Serial.begin(57600);
   Serial.println("Starting");
   tsd = ThingSpeakDev(myWriteAPIKey, 7, 15);
-  while(!tsd.isReady()) {
+  while (!tsd.isReady())
+  {
     Serial.println("Ceration of TSD failed");
     delay(5000);
   }
@@ -17,15 +18,15 @@ void setup()
   Serial.println("Ready");
 }
 
-void loop() 
+void loop()
 {
-  
-  if(!tsd.wait())
+
+  if (!tsd.wait())
   {
     float test = 42;
-  
+
     tsd.setField(7, test);
-  
+
     tsd.sendData();
   }
 }
