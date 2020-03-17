@@ -1,7 +1,7 @@
 /*
-  thinkSpeakDev.cpp - Library for sending ThingSpeakData to thei
+  thinkSpeakDev.cpp - Library for sending ThingSpeakData to their
   api using the EtherCard.h library.
-  Created by Julius Monska, March 13, 2020.
+  Created by LooxDev, March 13, 2020.
   Released into the public domain.
 */
 
@@ -20,7 +20,7 @@ ThingSpeakDev::ThingSpeakDev()
   m_waittime = 10;
   m_timer = millis();
 }
-ThingSpeakDev::ThingSpeakDev(const char* _key, int _numfields, int _waittime)
+ThingSpeakDev::ThingSpeakDev(const char *_key, int _numfields, int _waittime)
 {
   m_numfields = _numfields;
   m_fields = new float[m_numfields];
@@ -34,7 +34,7 @@ ThingSpeakDev::ThingSpeakDev(const char* _key, int _numfields, int _waittime)
   this->setupEthernet();
 }
 //------------------------------------------------------------------------------
-void ThingSpeakDev::setMacAdress(byte* _mac)
+void ThingSpeakDev::setMacAdress(byte *_mac)
 {
   m_mac[0] = _mac[0];
   m_mac[1] = _mac[1];
@@ -43,16 +43,16 @@ void ThingSpeakDev::setMacAdress(byte* _mac)
   m_mac[4] = _mac[4];
   m_mac[5] = _mac[5];
 }
-byte* ThingSpeakDev::getMacAdress()
+byte *ThingSpeakDev::getMacAdress()
 {
   return m_mac;
 }
 //------------------------------------------------------------------------------
-void  ThingSpeakDev::setWaitTime(int _waittime)
+void ThingSpeakDev::setWaitTime(int _waittime)
 {
   m_waittime = _waittime;
 }
-int  ThingSpeakDev::getWaitTime()
+int ThingSpeakDev::getWaitTime()
 {
   return m_waittime;
 }
@@ -72,12 +72,12 @@ void ThingSpeakDev::setNumFields(int _numfields)
     m_fields[i] = 0;
   }
 }
-int  ThingSpeakDev::getNumFields()
+int ThingSpeakDev::getNumFields()
 {
   return m_numfields;
 }
 //------------------------------------------------------------------------------
-const char* ThingSpeakDev::getWriteAPIKey()
+const char *ThingSpeakDev::getWriteAPIKey()
 {
   return m_apikey;
 }
@@ -104,19 +104,19 @@ bool ThingSpeakDev::isReady()
   return m_ready;
 }
 //------------------------------------------------------------------------------
-static void ts_callback (byte status, word off, word len) 
+static void ts_callback(byte status, word off, word len)
 {
   if (status != 0)
   {
     Serial.println(" ERROR >>>");
-    Ethernet::buffer[off+300] = 0;
-    Serial.print((const char*) Ethernet::buffer + off);
+    Ethernet::buffer[off + 300] = 0;
+    Serial.print((const char *)Ethernet::buffer + off);
     Serial.println("...");
-  } 
-  else 
+  }
+  else
   {
     Serial.println(" OK >>>");
-    Ethernet::buffer[off+300] = 0;
+    Ethernet::buffer[off + 300] = 0;
   }
 }
 
@@ -124,17 +124,17 @@ void ThingSpeakDev::sendData()
 {
   ether.packetLoop(ether.packetReceive());
 
-  char data[25+m_numfields*15];
+  char data[25 + m_numfields * 15];
   int len = 0;
   len += sprintf(data, "%s%s", "api_key=", m_apikey);
   for (int i = 0; i < m_numfields; i++)
   {
-    len += sprintf(data + len, "%s%d%s%s", "&field", i+1, "=", String(m_fields[i]).c_str());
+    len += sprintf(data + len, "%s%d%s%s", "&field", i + 1, "=", String(m_fields[i]).c_str());
   }
   Serial.print("[TSD] Data to be send: ");
   Serial.println(data);
-  char* test = new char[25+m_numfields*15];
-  strncpy(test, data, 25+m_numfields*15);
+  char *test = new char[25 + m_numfields * 15];
+  strncpy(test, data, 25 + m_numfields * 15);
   Serial.print("[TSD] <<< Request pending...");
   ether.browseUrl(PSTR("/update.php?"), test, website, ts_callback);
 
@@ -142,7 +142,7 @@ void ThingSpeakDev::sendData()
 }
 void ThingSpeakDev::setupEthernet()
 {
-  if (ether.begin(sizeof Ethernet::buffer, m_mac, SS) == 0)  
+  if (ether.begin(sizeof Ethernet::buffer, m_mac, SS) == 0)
   {
     // handle failure to initiate network interface
     Serial.println("[TSD] Failed to access Ethernet controller");
@@ -155,8 +155,8 @@ void ThingSpeakDev::setupEthernet()
     return;
   }
   ether.printIp("[TSD] IP:  ", ether.myip);
-  ether.printIp("[TSD] GW:  ", ether.gwip); 
-  ether.printIp("[TSD] DNS: ", ether.dnsip); 
+  ether.printIp("[TSD] GW:  ", ether.gwip);
+  ether.printIp("[TSD] DNS: ", ether.dnsip);
   if (!ether.dnsLookup(website))
   {
     // handle failure to obtain IP address for given website

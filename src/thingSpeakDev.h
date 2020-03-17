@@ -1,7 +1,7 @@
 /*
-  thinkSpeakDev.h - Library for sending ThingSpeakData to thei
-  api using the EtherCard.h library.
-  Created by Julius Monska, March 13, 2020.
+  thinkSpeakDev Library exmaple for sending Data to the
+  Thingspeak API
+  Created by LooxDev, March 13, 2020.
   Released into the public domain.
 */
 
@@ -20,16 +20,16 @@ public:
   ThingSpeakDev(const char *_key, int _numfields, int _waittime);
 
   void setMacAdress(byte _mac[6]);
-  byte* getMacAdress();
-  
+  byte *getMacAdress();
+
   void setWaitTime(int _waittime);
   int getWaitTime();
 
   bool wait();
-  
+
   void setNumFields(int _numfields);
   int getNumFields();
-  
+
   const char *getWriteAPIKey();
 
   void setField(int _fieldid, float _value);
@@ -42,7 +42,7 @@ public:
 private:
   void setupEthernet();
 
-  byte m_mac[6] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
+  byte m_mac[6] = {0x74, 0x69, 0x69, 0x2D, 0x30, 0x31};
   float *m_fields;
   int m_numfields;
   const char *m_apikey;
