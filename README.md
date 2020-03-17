@@ -49,7 +49,7 @@ This library depends on [GitHub-<EtherCard.h>-Library](https://github.com/njh/Et
 
 ## Example
 
-Examples include a "simple" Write Data Example. Receiving Data will be added in the future. You can find this and following examples from [Github-ThingSpeakDev-Library](https://github.com/adafruit/DHT-sensor-library/tree/master/examples).
+Examples include a "simple" Write Data Example. Receiving Data will be added in the future. You can find this and following examples from [Github-ThingSpeakDev-Library](https://github.com/LooxDev/thingspeakdev/tree/master/examples/).
 
 ```Cpp
 #include "thingSpeakDev.h"
