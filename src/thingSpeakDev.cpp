@@ -7,26 +7,25 @@
 
 #include "thingSpeakDev.h"
 
-static byte Ethernet::buffer[700];
+uint8_t Ethernet::buffer[700];
 
 //------------------------------------------------------------------------------
 ThingSpeakDev::ThingSpeakDev()
 {
-  Serial.println("[TSD] ");
   m_numfields = 1;
-  m_fields = new float[1];
-  m_fields[0] = 0;
-  m_apikey = NULL;
-  m_waittime = 10;
+  m_fields = new double[1];
+  m_fields[0] = 0.0;
+  m_apikey = "";
+  m_waittime = 300;
   m_timer = millis();
 }
-ThingSpeakDev::ThingSpeakDev(const char *_key, int _numfields, int _waittime)
+ThingSpeakDev::ThingSpeakDev(const char *_key, int _numfields, uint32_t _waittime)
 {
   m_numfields = _numfields;
-  m_fields = new float[m_numfields];
+  m_fields = new double[m_numfields];
   for (int i = 0; i < m_numfields; i++)
   {
-    m_fields[i] = 0;
+    m_fields[i] = 0.0;
   }
   m_apikey = _key;
   m_waittime = _waittime;
@@ -48,11 +47,11 @@ byte *ThingSpeakDev::getMacAdress()
   return m_mac;
 }
 //------------------------------------------------------------------------------
-void ThingSpeakDev::setWaitTime(int _waittime)
+void ThingSpeakDev::setWaitTime(uint32_t _waittime)
 {
   m_waittime = _waittime;
 }
-int ThingSpeakDev::getWaitTime()
+uint32_t ThingSpeakDev::getWaitTime()
 {
   return m_waittime;
 }
@@ -66,7 +65,7 @@ bool ThingSpeakDev::wait()
 void ThingSpeakDev::setNumFields(int _numfields)
 {
   m_numfields = _numfields;
-  m_fields = new float[m_numfields];
+  m_fields = new double[m_numfields];
   for (int i = 0; i < m_numfields; i++)
   {
     m_fields[i] = 0;
@@ -82,7 +81,7 @@ const char *ThingSpeakDev::getWriteAPIKey()
   return m_apikey;
 }
 //------------------------------------------------------------------------------
-void ThingSpeakDev::setField(int _fieldid, float _value)
+void ThingSpeakDev::setField(int _fieldid, double _value)
 {
   if (_fieldid <= 0 || _fieldid > m_numfields)
   {
@@ -90,7 +89,7 @@ void ThingSpeakDev::setField(int _fieldid, float _value)
   }
   m_fields[_fieldid - 1] = _value;
 }
-float ThingSpeakDev::getField(int _fieldid)
+double ThingSpeakDev::getField(int _fieldid)
 {
   if (_fieldid <= 0 || _fieldid > m_numfields)
   {
@@ -119,22 +118,24 @@ static void ts_callback(byte status, word off, word len)
     Ethernet::buffer[off + 300] = 0;
   }
 }
-
+//------------------------------------------------------------------------------
 void ThingSpeakDev::sendData()
 {
   ether.packetLoop(ether.packetReceive());
 
-  char data[25 + m_numfields * 15];
+  char data[25 + m_numfields * 16];
   int len = 0;
   len += sprintf(data, "%s%s", "api_key=", m_apikey);
   for (int i = 0; i < m_numfields; i++)
   {
-    len += sprintf(data + len, "%s%d%s%s", "&field", i + 1, "=", String(m_fields[i]).c_str());
+    char *val = new char[7];
+    dtostrf(m_fields[i], 4, 2, val);
+    len += sprintf(data + len, "%s%d%s%s", "&field", i + 1, "=", val);
   }
   Serial.print("[TSD] Data to be send: ");
   Serial.println(data);
-  char *test = new char[25 + m_numfields * 15];
-  strncpy(test, data, 25 + m_numfields * 15);
+  char *test = new char[len + 1];
+  strncpy(test, data, len + 1);
   Serial.print("[TSD] <<< Request pending...");
   ether.browseUrl(PSTR("/update.php?"), test, website, ts_callback);
 
@@ -142,7 +143,7 @@ void ThingSpeakDev::sendData()
 }
 void ThingSpeakDev::setupEthernet()
 {
-  if (ether.begin(sizeof Ethernet::buffer, m_mac, SS) == 0)
+  if (ether.begin(sizeof Ethernet::buffer, m_mac) == 0)
   {
     // handle failure to initiate network interface
     Serial.println("[TSD] Failed to access Ethernet controller");
@@ -164,5 +165,5 @@ void ThingSpeakDev::setupEthernet()
     return;
   }
   ether.printIp("[TSD] SRV: ", ether.hisip);
-  m_ready = true;
+  this->m_ready = true;
 }

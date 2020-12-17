@@ -17,13 +17,13 @@ class ThingSpeakDev
 {
 public:
   ThingSpeakDev();
-  ThingSpeakDev(const char *_key, int _numfields, int _waittime);
+  ThingSpeakDev(const char *_key, int _numfields, uint32_t _waittime);
 
   void setMacAdress(byte _mac[6]);
   byte *getMacAdress();
 
-  void setWaitTime(int _waittime);
-  int getWaitTime();
+  void setWaitTime(uint32_t _waittime);
+  uint32_t getWaitTime();
 
   bool wait();
 
@@ -32,8 +32,8 @@ public:
 
   const char *getWriteAPIKey();
 
-  void setField(int _fieldid, float _value);
-  float getField(int _fieldid);
+  void setField(int _fieldid, double _value);
+  double getField(int _fieldid);
 
   bool isReady();
 
@@ -43,10 +43,10 @@ private:
   void setupEthernet();
 
   byte m_mac[6] = {0x74, 0x69, 0x69, 0x2D, 0x30, 0x31};
-  float *m_fields;
+  double *m_fields;
   int m_numfields;
   const char *m_apikey;
-  int m_waittime;
+  uint32_t m_waittime;
   uint32_t m_timer;
 
   bool m_ready = false;
